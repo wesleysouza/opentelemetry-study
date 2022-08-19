@@ -202,7 +202,9 @@ http://localhost:16686/
 
 ```
 
-![Lista](/gifs/quarkus-app-trace.gif "")
+CCCCCCC
+
+![Gif](/quarkus/gifs/quarkus-app-trace.gif "")
 
 ## Referências
 
