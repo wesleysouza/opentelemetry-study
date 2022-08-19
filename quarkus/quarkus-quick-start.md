@@ -35,13 +35,9 @@ Objetivo: ser "a" biblioteca para captura de telemetria:
 ## Padrões e Especificações
 
 - Especificação da API
-
   - Como a API de instrumentação deve ser independente do SDK usado;
-
 - Especificação do SDK
-
   - Como os SDKs devem se comportar, independente da linguagem e implementação;
-
 - Especificação de dados
   - Interface description languagem (IDL), especificando como os dados devem ser formagtados e transmitidos ou recebidos;
   - OTLP: OpenTelemetry Line Protocol, um conjunto de arquivos proto, denfinindo tanto o transporte quanto o conteúdo da mensagem.
