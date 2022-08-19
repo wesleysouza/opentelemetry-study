@@ -225,7 +225,7 @@ public class GreetingResource2 {
 
     private static final Logger LOG = Logger.getLogger(GreetingResource2.class);
 
-    //Criando trechos de iteresse do negocio
+    //Create BT snippet
     @Inject
     Tracer tracer;
 
