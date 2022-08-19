@@ -95,13 +95,13 @@ import org.jboss.logging.Logger;
 @Path("/hello")
 public class GreetingResource {
 
-    //private static final Logger LOG = Logger.getLogger(TracedResource.class);
+    private static final Logger LOG = Logger.getLogger(GreetingResource.class);
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
-        //LOG.info("AT-AT");
-        return "AT-AT";
+        LOG.info("hello at-at");
+        return "Hello at-at";
     }
 }
 ```
@@ -210,9 +210,64 @@ Ilustração da aplicação gerando traces via interface do Jaeger:
 
 ![Gif](/quarkus/gifs/quarkus-jarger-2.gif "")
 
+#### Melhorando nossa aplicação
+
+```java
+package org.acme;
+
+import java.util.Random;
+
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import org.jboss.logging.Logger;
+
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
+
+@Path("/bt")
+public class GreetingResource2 {
+
+    private static final Logger LOG = Logger.getLogger(GreetingResource2.class);
+
+    //Criando trechos de iteresse do negocio
+    @Inject
+    Tracer tracer;
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello() {
+        
+        LOG.info("BT");
+
+        Span span = tracer.spanBuilder("Minha BT").startSpan();
+        span.setAttribute("Client ID", getId());
+        span.end();
+
+        return "BT";
+    }
+
+    //Generate hashcode for client id
+    public int getId(){
+        Random generate = new Random();
+        return generate.hashCode();
+    }
+}
+```
+
+Analisando novos traces no Jaeger:
+
+![Gif](/quarkus/gifs/quarkus-jarger-3.gif "")
+
 ## Referências
 
 [Quarkus Get Started](https://quarkus.io/get-started/)
+
 [Quarkus OpenTelemetry](https://quarkus.io/guides/opentelemetry)
+
 [Tudo o que você PRECISA saber sobre OpenTelemetry](https://youtu.be/BVQpM01CZPI)
+
+[Open Telemetry Java Manual Instrumentation](https://opentelemetry.io/docs/instrumentation/java/manual/)
 
