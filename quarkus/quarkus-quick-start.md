@@ -34,20 +34,19 @@ Objetivo: ser "a" biblioteca para captura de telemetria:
 
 ## Padrões e Especificações
 
-### Especificação da API
+- Especificação da API
 
-- Como a API de instrumentação deve ser independente do SDK usado;
+  - Como a API de instrumentação deve ser independente do SDK usado;
 
-### Especificação do SDK
+- Especificação do SDK
 
-- Como os SDKs devem se comportar, independente da linguagem e implementação;
+  - Como os SDKs devem se comportar, independente da linguagem e implementação;
 
-### Especificação de dados
-
-- Interface description languagem (IDL), especificando como os dados devem ser formagtados e transmitidos ou recebidos;
-- OTLP: OpenTelemetry Line Protocol, um conjunto de arquivos proto, denfinindo tanto o transporte quanto o conteúdo da mensagem.
-	- gPRC (Linguagem de definição de interfaces)
-	- O arquivo definine quais são serviços e os endpoints que precisam ser implementados para que seja compátiveu com o padrão.
+- Especificação de dados
+  - Interface description languagem (IDL), especificando como os dados devem ser formagtados e transmitidos ou recebidos;
+  - OTLP: OpenTelemetry Line Protocol, um conjunto de arquivos proto, denfinindo tanto o transporte quanto o conteúdo da mensagem.
+	  - gPRC (Linguagem de definição de interfaces)
+	  - O arquivo definine quais são serviços e os endpoints que precisam ser implementados para que seja compátiveu com o padrão.
 		- É especificado também quais são as mensagens que são trocadas por essas interfaces, o que que o cliente precisa enviar para que o servidor entenda.
 
 ## Instrumentação 
@@ -188,15 +187,13 @@ services:
       - jaeger-all-in-one
 ```
 
-Pronto, agora podemos executar a aplicação:
+Pronto, agora já temos o Jaeger rodando (http://localhost:16686/) e podemos executar a aplicação:
 
 ```bash
 ./mvnw clean quarkus:dev
 #ou
 quarkus dev
 ```
-
-http://localhost:16686/
 
 ```bash
 
@@ -260,6 +257,73 @@ public class GreetingResource2 {
 Analisando novos traces no Jaeger:
 
 ![Gif](/quarkus/gifs/quarkus-jarger-3.gif "")
+
+#### Adicionando eventos
+
+```java
+package org.acme;
+
+import java.util.Random;
+
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import org.jboss.logging.Logger;
+
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
+
+@Path("/bt")
+public class GreetingResource2 {
+
+    private static final Logger LOG = Logger.getLogger(GreetingResource2.class);
+
+    //Criando trechos de iteresse do negocio
+    @Inject
+    Tracer tracer;
+
+    private static Span span;
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello() {
+        
+        int id;
+
+        LOG.info("BT");
+
+        span = tracer.spanBuilder("Minha BT").startSpan();
+        id = getId();
+        span.setAttribute("Client ID", id);
+        classifyCustomer(id);
+        span.end();
+
+        return "BT";
+    }
+
+    public int getId(){
+        Random generate = new Random();
+
+        span.addEvent("Generate ID");
+
+        return generate.hashCode();
+    }
+
+    public void classifyCustomer(int id){
+        if(id % 2 == 0){
+            span.addEvent("Client PF");
+        }else{
+            span.addEvent("Client PJ");
+        }
+    }
+}
+```
+
+Vendo o trace com os eventos:
+
+![Gif](/quarkus/gifs/quarkus-jarger-4.gif "")
 
 ## Referências
 
