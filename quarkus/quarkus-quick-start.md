@@ -202,9 +202,13 @@ http://localhost:16686/
 
 ```
 
-CCCCCCC
+Ilustração da aplicação rodando e gerando trace:
 
 ![Gif](/quarkus/gifs/quarkus-app-trace.gif "")
+
+Ilustração da aplicação gerando traces via interface do Jaeger:
+
+![Gif](/quarkus/gifs/quarkus-jarger-2.gif "")
 
 ## Referências
 
