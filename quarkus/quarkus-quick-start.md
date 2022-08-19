@@ -196,11 +196,17 @@ Pronto, agora podemos executar a aplicação:
 quarkus dev
 ```
 
+http://localhost:16686/
+
 ```bash
 
 ```
 
+![Lista](/gifs/quarkus-app-trace.gif "")
+
 ## Referências
 
-[Quartus Get Started](https://quarkus.io/get-started/)
+[Quarkus Get Started](https://quarkus.io/get-started/)
+[Quarkus OpenTelemetry](https://quarkus.io/guides/opentelemetry)
+[Tudo o que você PRECISA saber sobre OpenTelemetry](https://youtu.be/BVQpM01CZPI)
 
